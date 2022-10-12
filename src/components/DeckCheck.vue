@@ -82,28 +82,27 @@ const findCombos = () => {
   }
   identity = identity.map((e) => e.toLowerCase());
   main: for (let combo of comboStore.combos) {
-    for (let colour of combo.identity) {
+    for (let colour of combo.identity.split(",")) {
       if (colour !== "c" && !identity.includes(colour)) {
         continue main;
       }
-
-      let numberCardsNotInDeck = 0;
-      let tempCardsNotInDeck = [];
-      for (let card of combo.cards) {
-        if (!normalizedDeck.includes(normalizeCardName(card))) {
-          numberCardsNotInDeck += 1;
-          tempCardsNotInDeck.push(card);
-          if (numberCardsNotInDeck > 1) {
-            continue main;
-          }
+    }
+    let numberCardsNotInDeck = 0;
+    let tempCardsNotInDeck = [];
+    for (let card of combo.cards) {
+      if (!normalizedDeck.includes(normalizeCardName(card))) {
+        numberCardsNotInDeck += 1;
+        tempCardsNotInDeck.push(card);
+        if (numberCardsNotInDeck > 1) {
+          continue main;
         }
       }
-      cardsNotInDeck = [...new Set([...cardsNotInDeck, ...tempCardsNotInDeck])];
-      if (numberCardsNotInDeck === 1) {
-        almostCombosInDeck.push(combo);
-      } else {
-        combosInDeck.push(combo);
-      }
+    }
+    cardsNotInDeck = [...new Set([...cardsNotInDeck, ...tempCardsNotInDeck])];
+    if (numberCardsNotInDeck === 1) {
+      almostCombosInDeck.push(combo);
+    } else {
+      combosInDeck.push(combo);
     }
   }
   comboStore.almostCombosInDeck = almostCombosInDeck;

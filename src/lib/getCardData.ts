@@ -166,5 +166,4 @@ export default async function () {
 
   cardStore.cards = cardData;
   cardStore.isLoaded = true;
-  console.log("loaded card data");
 }

@@ -37,5 +37,4 @@ export default async function () {
 
   comboStore.combos = comboData;
   comboStore.isLoaded = true;
-  console.log("loaded card data");
 }

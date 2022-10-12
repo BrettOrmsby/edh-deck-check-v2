@@ -57,7 +57,7 @@ export default {
         style="text-decoration: none"
         target="_blank"
         :href="`https://www.commanderspellbook.com/combo/${comboStore.comboModal.id}/`"
-        ><Button icon="pi pi-book" label="Spell Book"
+        ><Button icon="pi pi-book" label="Commander Spell Book"
       /></a>
     </template>
   </Dialog>
@@ -70,10 +70,6 @@ import CardImage from "@/components/combo/CardImage.vue";
 import SymbolText from "@/components/combo/SymbolText.vue";
 import { computed } from "vue";
 import comboStore from "@/store/combos";
-
-const closeModal = () => {
-  comboStore.showComboModal = false;
-};
 
 const header = computed(() => {
   const main = [...comboStore.comboModal.cards].splice(0, 2).join(" | ");

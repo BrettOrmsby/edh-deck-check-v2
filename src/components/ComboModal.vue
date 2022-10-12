@@ -8,7 +8,7 @@ export default {
   <Dialog
     :header="header"
     v-model:visible="comboStore.showComboModal"
-    :style="{ width: '90vw' }"
+    style="maxWidth: 800px;width: 100%;margin: 0 2em;"
     :modal="true"
   >
     <h3>Cards</h3>
@@ -52,14 +52,26 @@ export default {
         <SymbolText :text="item" />
       </li>
     </ul>
-    <template #footer>
+    <div class="footer">
+      <a
+        style="text-decoration: none"
+        target="_blank"
+        :href="`https://edhrec.com/combos/${edhrecLinkColour}/${comboStore.comboModal.id}`"
+        ><Button icon="pi pi-chart-bar" label="EDHREC"
+      /></a>
       <a
         style="text-decoration: none"
         target="_blank"
         :href="`https://www.commanderspellbook.com/combo/${comboStore.comboModal.id}/`"
         ><Button icon="pi pi-book" label="Commander Spell Book"
       /></a>
-    </template>
+      <a
+        style="text-decoration: none"
+        target="_blank"
+        :href="`https://commanderspellbook.com/report-error?comboId=${comboStore.comboModal.id}`"
+        ><Button icon="pi pi-ban" label="Report a Problem" class="p-button-danger"
+      /></a>
+    </div>
   </Dialog>
 </template>
 
@@ -89,6 +101,54 @@ const formatParagraphToList = (text: string) => {
     .split(/\.(?!$)/g)
     .filter((e) => e);
 };
+
+const edhrecLinkColour = computed(() => {
+  const comboIdentity = comboStore.comboModal.identity.split(",").sort();
+  const colourCombos = [
+    ["c"],
+    ["w"],
+    ["u"],
+    ["b"],
+    ["r"],
+    ["g"],
+    ["w", "u"],
+    ["u", "b"],
+    ["b", "r"],
+    ["r", "g"],
+    ["g", "w"],
+    ["w", "b"],
+    ["u", "r"],
+    ["b", "g"],
+    ["r", "w"],
+    ["g", "u"],
+    ["w", "u", "b"],
+    ["u", "b", "r"],
+    ["b", "r", "g"],
+    ["r", "g", "w"],
+    ["g", "w", "u"],
+    ["w", "b", "g"],
+    ["u", "r", "w"],
+    ["b", "g", "u"],
+    ["r", "w", "b"],
+    ["g", "u", "r"],
+    ["w", "u", "b", "r"],
+    ["u", "b", "r", "g"],
+    ["b", "r", "g", "w"],
+    ["r", "g", "w", "u"],
+    ["g", "w", "u", "b"],
+    ["w", "u", "b", "r", "g"],
+  ];
+
+  return colourCombos
+    .find((e) => {
+      const colourCombo = [...e].sort();
+      return (
+        colourCombo.length === comboIdentity.length &&
+        comboIdentity.every((val, index) => val === colourCombo[index])
+      );
+    })
+    ?.join("");
+});
 </script>
 
 <style scoped>
@@ -98,5 +158,12 @@ const formatParagraphToList = (text: string) => {
   flex-wrap: wrap;
   row-gap: var(--space-small);
   column-gap: var(--space-small);
+}
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: var(--space-small);
+  column-gap: var(--space-small);
+    justify-content: flex-end;
 }
 </style>

@@ -1,0 +1,30 @@
+:root {
+   --border-radius: 10px;
+   --space-small: 1em;
+   --space-medium: 2em;
+   --space-large: 3em;
+}
+
+* {
+   font-family: var(--font-family)
+}
+
+body {
+   background-color: var(--surface-ground);
+}
+
+a {
+   color: #8dd0ff;
+}
+
+a:hover {
+  color: #56bdff;
+}
+
+.symbol {
+   width: 1em;
+   height: 1em;
+   padding: 0.1em;
+   vertical-align: middle;
+   display: inline-block;
+}

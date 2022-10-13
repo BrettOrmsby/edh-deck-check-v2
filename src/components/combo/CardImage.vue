@@ -7,9 +7,11 @@ export default {
 <template>
   <a :href="card?.url" target="_blank">
     <div class="loader" v-show="loading && !cardStore.isError">
-      <i class="pi pi-spin pi-spinner"></i>
+      <SpinLoader size="2em" />
     </div>
-    <div class="loader" v-show="cardStore.isError"><span>Error</span></div>
+    <div class="loader" v-show="cardStore.isError">
+      <InlineMessage severity="error">Loading Error</InlineMessage>
+    </div>
     <img
       v-show="!loading && !cardStore.isError"
       :src="card?.images.png"
@@ -21,6 +23,8 @@ export default {
 </template>
 
 <script lang="ts" setup>
+import SpinLoader from "@/components/utility/SpinLoader.vue";
+import InlineMessage from "primevue/inlinemessage";
 import getCard from "@/lib/getCard";
 import cardStore from "@/store/cards";
 import { computed, ref, watchEffect } from "vue";
@@ -64,9 +68,5 @@ small {
   display: block;
   text-align: center;
   font-size: 0.7em;
-}
-.pi {
-  font-size: 2em;
-  color: var(--primary-400);
 }
 </style>

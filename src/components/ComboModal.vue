@@ -8,7 +8,7 @@ export default {
   <Dialog
     :header="header"
     v-model:visible="comboStore.showComboModal"
-    style="maxWidth: 800px;width: 100%;margin: 0 2em;"
+    style="max-width: 800px; width: 100%; margin: 0 2em"
     :modal="true"
   >
     <h3>Cards</h3>
@@ -69,7 +69,10 @@ export default {
         style="text-decoration: none"
         target="_blank"
         :href="`https://commanderspellbook.com/report-error?comboId=${comboStore.comboModal.id}`"
-        ><Button icon="pi pi-ban" label="Report a Problem" class="p-button-danger"
+        ><Button
+          icon="pi pi-ban"
+          label="Report a Problem"
+          class="p-button-danger"
       /></a>
     </div>
   </Dialog>
@@ -164,6 +167,6 @@ const edhrecLinkColour = computed(() => {
   flex-wrap: wrap;
   row-gap: var(--space-small);
   column-gap: var(--space-small);
-    justify-content: flex-end;
+  justify-content: flex-end;
 }
 </style>

@@ -5,7 +5,23 @@ export default {
 </script>
 
 <template>
-  <div class="card-container">
+  <Message
+    v-if="comboStore.isError || cardStore.isError"
+    severity="error"
+    :closable="false"
+    >An Error Occurred</Message
+  >
+  <SpinLoader
+    v-else-if="!comboStore.isLoaded || !cardStore.isLoaded"
+    size="3em"
+  />
+  <Message v-else-if="cardsInDeck.length < 1" severity="warn" :closable="false"
+    >Your Deck Is Empty</Message
+  >
+  <Message v-else-if="combos.length < 1" severity="info" :closable="false"
+    >No Combos Found</Message
+  >
+  <div v-else class="card-container">
     <DeferredContent v-for="(combo, index) in combos" :key="index">
       <Card>
         <template #header v-if="headerImage(combo)">
@@ -42,11 +58,14 @@ export default {
 import DeferredContent from "primevue/deferredcontent";
 import Card from "primevue/card";
 import Button from "primevue/Button";
+import Message from "primevue/message";
 import CardLink from "./CardLink.vue";
+import SpinLoader from "@/components/utility/SpinLoader.vue";
 import type { Combo } from "@/lib/types";
 import getCard from "@/lib/getCard";
 import comboStore from "@/store/combos";
-defineProps<{ combos: Combo[] }>();
+import cardStore from "@/store/cards";
+defineProps<{ combos: Combo[]; cardsInDeck: string[] }>();
 
 const headerImage = (combo: Combo) => {
   return getCard(combo.cards[0])?.images.art;

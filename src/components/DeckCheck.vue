@@ -5,25 +5,38 @@ export default {
 </script>
 
 <template>
-  <Card>
-    <template #content>
-      <Textarea
-        v-model="rawDeckText"
-        :rows="10"
-        :autoResize="false"
-        :placeholder="'Enter your deck'"
-      />
-    </template>
-  </Card>
+  <Textarea
+    v-model="rawDeckText"
+    :rows="10"
+    :autoResize="false"
+    :placeholder="'Enter your deck'"
+  />
+  <Panel
+    v-if="unfoundCards.length > 0"
+    :toggleable="true"
+    header="Cards Not Found"
+    style="margin-top: var(--space-small)"
+  >
+    <p>
+      Here are the cards that have not been found due to their spelling,
+      legality or other issues:
+    </p>
+    <ul>
+      <li v-for="(card, index) in unfoundCards" :key="index">{{ card }}</li>
+    </ul>
+  </Panel>
   <h2>Combos in Deck</h2>
-  <ComboList :combos="comboStore.combosInDeck" />
+  <ComboList :combos="comboStore.combosInDeck" :cards-in-deck="cardsToDeck" />
   <h2>Combos Almost in Deck</h2>
-  <ComboList :combos="comboStore.almostCombosInDeck" />
+  <ComboList
+    :combos="comboStore.almostCombosInDeck"
+    :cards-in-deck="cardsToDeck"
+  />
 </template>
 
 <script lang="ts" setup>
 import Textarea from "primevue/textarea";
-import Card from "primevue/card";
+import Panel from "primevue/panel";
 import ComboList from "@/components/combo/ComboList.vue";
 import { ref, computed, watchEffect, onMounted } from "vue";
 import loadComboData from "@/lib/getComboData";
@@ -125,7 +138,7 @@ watchEffect(() => {
   resize: none;
   width: 100%;
 }
-.p-card {
+textarea {
   width: 75vw;
   margin: 0 auto;
 }

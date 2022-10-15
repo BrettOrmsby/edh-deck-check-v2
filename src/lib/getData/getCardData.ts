@@ -1,7 +1,7 @@
-import safeFetch from "./fetch";
+import safeFetch from "../fetch";
 import cardStore from "@/store/cards";
 import normalizeCardName from "@/lib/normalizeCard";
-import type { Card } from "./types";
+import type { Card } from "../types";
 export default async function () {
   type BulkDataResponse = {
     data: Array<{

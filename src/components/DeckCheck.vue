@@ -39,9 +39,10 @@ import Textarea from "primevue/textarea";
 import Panel from "primevue/panel";
 import ComboList from "@/components/combo/ComboList.vue";
 import { ref, computed, watchEffect, onMounted } from "vue";
-import loadComboData from "@/lib/getComboData";
-import loadCardData from "@/lib/getCardData";
-import loadSymbolData from "@/lib/getSymbolData";
+import loadComboData from "@/lib/getData/getComboData";
+import loadCardData from "@/lib/getData/getCardData";
+import loadPriceData from "@/lib/getData/getSymbolData";
+import loadSymbolData from "@/lib/getData/getSymbolData";
 import getCard from "@/lib/getCard";
 import normalizeCardName from "@/lib/normalizeCard";
 import comboStore from "@/store/combos";
@@ -54,6 +55,7 @@ const unfoundCards = ref<string[]>([]);
 onMounted(() => {
   loadComboData();
   loadCardData();
+  loadPriceData();
   loadSymbolData();
 });
 

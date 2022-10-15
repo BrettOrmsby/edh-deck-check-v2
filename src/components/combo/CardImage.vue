@@ -18,7 +18,13 @@ export default {
       ref="imageElement"
       :alt="name"
     />
-    <small>${{ card?.price || "" }}</small>
+    <small
+      >${{
+        cardStore.price[normalizeCardName(card?.name || "")]?.toFixed(2) ||
+        card?.price ||
+        0
+      }}</small
+    >
   </a>
 </template>
 
@@ -26,6 +32,7 @@ export default {
 import SpinLoader from "@/components/utility/SpinLoader.vue";
 import InlineMessage from "primevue/inlinemessage";
 import getCard from "@/lib/getCard";
+import normalizeCardName from "@/lib/normalizeCard";
 import cardStore from "@/store/cards";
 import { computed, ref, watchEffect } from "vue";
 const props = defineProps<{ name: string }>();

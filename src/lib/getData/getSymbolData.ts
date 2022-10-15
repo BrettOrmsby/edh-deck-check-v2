@@ -1,4 +1,4 @@
-import safeFetch from "./fetch";
+import safeFetch from "../fetch";
 import comboStore from "@/store/combos";
 
 export default async function () {

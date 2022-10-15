@@ -1,5 +1,5 @@
-import safeFetch from "./fetch";
-import type { Combo } from "./types";
+import safeFetch from "../fetch";
+import type { Combo } from "../types";
 import comboStore from "@/store/combos";
 
 export default async function () {

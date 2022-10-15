@@ -11,7 +11,7 @@ export default {
     @mouseleave="hideTooltip()"
     @focus="showTooltip()"
     @blur="hideTooltip()"
-    :class="{ notInDeck: cardStore.cardsNotInDeck.includes(name) }"
+    :class="{ red: cardStore.cardsNotInDeck.includes(name) }"
     >{{ name }}</a
   >
   <div
@@ -81,8 +81,5 @@ function hideTooltip() {
   display: none;
   padding-left: 0.5em;
   z-index: 2;
-}
-.notInDeck {
-  color: var(--red-400);
 }
 </style>

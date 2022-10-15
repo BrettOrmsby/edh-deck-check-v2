@@ -5,7 +5,11 @@ export default {
 </script>
 
 <template>
-  <a :href="card?.url" target="_blank">
+  <a
+    :href="card?.url"
+    target="_blank"
+    :class="{ red: cardStore.cardsNotInDeck.includes(name) }"
+  >
     <div class="loader" v-show="loading && !cardStore.isError">
       <SpinLoader size="2em" />
     </div>
@@ -66,7 +70,6 @@ img,
 }
 a {
   text-decoration: none;
-  color: var(--primary-400);
   background-color: var(--surface-d);
   display: block;
   border-radius: var(--border-radius);

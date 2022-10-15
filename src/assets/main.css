@@ -26,6 +26,13 @@ a:hover {
   color: #56bdff;
 }
 
+.red {
+   color: #e35b68;
+}
+.red:hover {
+   color: #d84957;
+}
+
 .symbol {
    width: 1em;
    height: 1em;

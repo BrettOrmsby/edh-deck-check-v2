@@ -5,7 +5,7 @@ export default reactive<{
   isError: boolean;
   isLoaded: boolean;
   combos: Combo[];
-  almostCombosInDeck: Combo[];
+  closeCombos: Combo[];
   combosInDeck: Combo[];
   comboModal: Combo;
   showComboModal: boolean;
@@ -14,7 +14,7 @@ export default reactive<{
   isError: false,
   isLoaded: false,
   combos: [],
-  almostCombosInDeck: [],
+  closeCombos: [],
   combosInDeck: [],
   comboModal: {
     id: "",

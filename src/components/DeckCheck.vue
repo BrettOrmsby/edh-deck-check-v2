@@ -27,21 +27,20 @@ export default {
   </Panel>
   <h2>Combos in Deck</h2>
   <ComboList :combos="comboStore.combosInDeck" :cards-in-deck="cardsToDeck" />
-  <h2>Combos Almost in Deck</h2>
-  <ComboList
-    :combos="comboStore.almostCombosInDeck"
-    :cards-in-deck="cardsToDeck"
-  />
+  <h2>Close Combos</h2>
+  <CloseComboData />
+  <ComboList :combos="comboStore.closeCombos" :cards-in-deck="cardsToDeck" />
 </template>
 
 <script lang="ts" setup>
 import Textarea from "primevue/textarea";
 import Panel from "primevue/panel";
 import ComboList from "@/components/combo/ComboList.vue";
+import CloseComboData from "@/components/combo/CloseComboData.vue";
 import { ref, computed, watchEffect, onMounted } from "vue";
 import loadComboData from "@/lib/getData/getComboData";
 import loadCardData from "@/lib/getData/getCardData";
-import loadPriceData from "@/lib/getData/getSymbolData";
+import loadPriceData from "@/lib/getData/getPriceData";
 import loadSymbolData from "@/lib/getData/getSymbolData";
 import getCard from "@/lib/getCard";
 import normalizeCardName from "@/lib/normalizeCard";
@@ -120,7 +119,7 @@ const findCombos = () => {
       combosInDeck.push(combo);
     }
   }
-  comboStore.almostCombosInDeck = almostCombosInDeck;
+  comboStore.closeCombos = almostCombosInDeck;
   comboStore.combosInDeck = combosInDeck;
   cardStore.cardsNotInDeck = cardsNotInDeck;
 };

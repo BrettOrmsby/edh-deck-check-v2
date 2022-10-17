@@ -22,13 +22,9 @@ export default {
       ref="imageElement"
       :alt="name"
     />
-    <small
-      >${{
-        cardStore.price[normalizeCardName(card?.name || "")]?.toFixed(2) ||
-        card?.price ||
-        0
-      }}</small
-    >
+    <small>{{
+      toCurrency(cardStore.price[normalizeCardName(card?.name || "")] || 0)
+    }}</small>
   </a>
 </template>
 
@@ -57,6 +53,10 @@ watchEffect(() => {
     };
   }
 });
+
+const toCurrency = (value: number) => {
+  return value.toLocaleString("en-US", { style: "currency", currency: "USD" });
+};
 </script>
 
 <style scoped>

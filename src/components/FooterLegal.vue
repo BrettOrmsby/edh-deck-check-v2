@@ -25,17 +25,19 @@ export default {
           >.
         </p>
         <p>
-          EDH Deck Check is unofficial and non-endorsed (by Commander Spellbook, Scryfall and Wizards) Fan Content permitted
-          under Wizard's
+          EDH Deck Check is unofficial and non-endorsed (by Commander Spellbook,
+          Scryfall and Wizards) Fan Content permitted under Wizard's
           <a href="https://company.wizards.com/en/legal/fancontentpolicy"
             >Fan Content Policy</a
-          >. Some content used is property of Wizards of the Coast.<br/><br/>
+          >. Some content used is property of Wizards of the Coast.<br /><br />
         </p>
         <p>
           The source for EDH Deck Check can be found on
           <a href="https://github.com/BrettOrmsby/edh-deck-check-v2">Github</a>.
         </p>
-        <p>All other content © Brett Ormsby 2022-{{ new Date().getFullYear() }}</p>
+        <p>
+          All other content © Brett Ormsby 2022-{{ new Date().getFullYear() }}
+        </p>
       </div>
     </template>
   </Card>
@@ -51,12 +53,12 @@ import Card from "primevue/card";
   margin-top: var(--space-large);
 }
 a {
-    filter: saturate(50%);
+  filter: saturate(50%);
 }
 p {
-    max-width: 60ch;
-    font-size: 0.8em;
-    color: rgba(255, 255, 255, 0.6);
-    margin: 0 auto;
+  max-width: 60ch;
+  font-size: 0.8em;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0 auto;
 }
 </style>

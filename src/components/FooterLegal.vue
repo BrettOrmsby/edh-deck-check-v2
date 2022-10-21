@@ -33,7 +33,7 @@ export default {
         </p>
         <p>
           The source for EDH Deck Check can be found on
-          <a href="https://github.com/BrettOrmsby/deck-combo">Github</a>.
+          <a href="https://github.com/BrettOrmsby/edh-deck-check-v2">Github</a>.
         </p>
         <p>All other content © Brett Ormsby 2022-{{ new Date().getFullYear() }}</p>
       </div>

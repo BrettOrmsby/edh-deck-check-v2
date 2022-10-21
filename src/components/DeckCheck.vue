@@ -6,10 +6,11 @@ export default {
 
 <template>
   <Textarea
+    id="scrollTo"
     v-model="rawDeckText"
     :rows="10"
     :autoResize="false"
-    :placeholder="'Enter your deck'"
+    :placeholder="'Enter your deck:\nHeliod, Sun-Crowned\n1 Walking Ballista (2xm) 306'"
   />
   <Panel
     v-if="unfoundCards.length > 0"

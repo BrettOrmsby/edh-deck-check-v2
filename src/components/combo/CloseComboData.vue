@@ -5,7 +5,7 @@ export default {
 </script>
 
 <template>
-  <div v-if="isShown" style="margin-bottom: var(--space-small)">
+  <div v-if="isShown" style="margin-bottom: var(--space-medium)">
     <Panel header="Missing Card Summary" :collapsed="true" :toggleable="true">
       <DataTable
         :value="data"

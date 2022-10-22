@@ -80,7 +80,7 @@ export default {
 
 <script lang="ts" setup>
 import Dialog from "primevue/dialog";
-import Button from "primevue/button/sfc";
+import Button from "primevue/button"
 import CardImage from "@/components/combo/CardImage.vue";
 import SymbolText from "@/components/combo/SymbolText.vue";
 import { computed } from "vue";

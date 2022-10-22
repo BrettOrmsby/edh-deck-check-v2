@@ -25,7 +25,7 @@ export default {
 </template>
 
 <script lang="ts" setup>
-import Button from "primevue/Button";
+import Button from "primevue/button";
 import Card from "primevue/card";
 const scroll = () =>
   window.scroll({

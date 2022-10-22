@@ -57,7 +57,7 @@ export default {
 <script lang="ts" setup>
 import DeferredContent from "primevue/deferredcontent";
 import Card from "primevue/card";
-import Button from "primevue/Button";
+import Button from "primevue/button";
 import Message from "primevue/message";
 import CardLink from "./CardLink.vue";
 import SpinLoader from "@/components/utility/SpinLoader.vue";

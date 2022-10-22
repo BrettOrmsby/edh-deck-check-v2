@@ -11,6 +11,7 @@ export default {
         :value="data"
         removableSort
         stripedRows
+        class="p-datatable-sm"
         responsiveLayout="scroll"
       >
         <Column field="name" header="Name" :sortable="true">
@@ -109,5 +110,9 @@ const data = computed(() => {
 <style scoped>
 :deep(.p-panel .p-panel-content) {
   padding: 0;
+}
+:deep(.p-datatable-table) {
+  min-width: 600px;
+  width: 100%;
 }
 </style>

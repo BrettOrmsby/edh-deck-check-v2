@@ -105,6 +105,9 @@ const findCombos = () => {
     let numberCardsNotInDeck = 0;
     let tempCardsNotInDeck = [];
     for (let card of combo.cards) {
+      if (!getCard(card)) {
+        continue main;
+      }
       if (!normalizedDeck.includes(normalizeCardName(card))) {
         numberCardsNotInDeck += 1;
         tempCardsNotInDeck.push(card);

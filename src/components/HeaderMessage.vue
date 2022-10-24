@@ -20,7 +20,11 @@ export default {
         <Button label="Get Started" @click="scroll()" />
       </template>
     </Card>
-    <img src="@/assets/images/header.png" />
+    <picture>
+      <source srcset="@/assets/images/header.webp" type="image/webp" />
+      <source srcset="@/assets/images/header.png" type="image/jpeg" />
+      <img src="@/assets/images/header.png" alt="Partners" />
+    </picture>
   </div>
 </template>
 

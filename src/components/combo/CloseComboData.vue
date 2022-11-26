@@ -21,19 +21,23 @@ export default {
         </Column>
         <Column field="price" header="Price" :sortable="true">
           <template #body="slotProps">
-            {{
-              slotProps.data.price.toLocaleString("en-US", {
-                style: "currency",
-                currency: "USD",
-              })
-            }}
+            <div style="text-align: right">
+              {{
+                slotProps.data.price.toLocaleString("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                })
+              }}
+            </div>
           </template>
         </Column>
-        <Column
-          field="comboNumber"
-          header="# of Combos"
-          :sortable="true"
-        ></Column>
+        <Column field="comboNumber" header="# of Combos" :sortable="true">
+          <template #body="slotProps">
+            <div style="text-align: right">
+              {{ slotProps.data.comboNumber }}
+            </div>
+          </template>
+        </Column>
         <Column field="results" header="Results">
           <template #body="slotProps">
             <ul>
@@ -77,6 +81,7 @@ type MissingCardData = {
   comboNumber: number;
   results: string[];
 };
+
 const data = computed(() => {
   let cardData: MissingCardData[] = [];
   for (let card of cardStore.cardsNotInDeck) {

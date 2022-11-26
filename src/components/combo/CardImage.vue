@@ -35,6 +35,7 @@ import getCard from "@/lib/getCard";
 import normalizeCardName from "@/lib/normalizeCard";
 import cardStore from "@/store/cards";
 import { computed, ref, watchEffect } from "vue";
+
 const props = defineProps<{ name: string }>();
 const loading = ref(true);
 const imageElement = ref<HTMLImageElement | null>(null);

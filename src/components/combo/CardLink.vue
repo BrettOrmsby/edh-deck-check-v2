@@ -31,6 +31,7 @@ import { ref } from "vue";
 import CardImage from "./CardImage.vue";
 import cardStore from "@/store/cards";
 import { computePosition, flip, shift } from "@floating-ui/dom";
+
 defineProps<{ name: string }>();
 
 const revealed = ref(false);

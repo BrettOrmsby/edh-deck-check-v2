@@ -20,7 +20,7 @@ export default {
         <Button label="Get Started" @click="scroll()" />
       </template>
     </Card>
-    <img src="/header.png" alt="header"/>
+    <img src="/header.png" alt="header" />
   </div>
 </template>
 

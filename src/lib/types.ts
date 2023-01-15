@@ -5,8 +5,8 @@ export type Card = {
     art: string;
   };
   url: string;
-  price: string;
   colourId: string[];
+  manaCost: string;
 };
 
 export type Combo = {
@@ -16,4 +16,16 @@ export type Combo = {
   before: string;
   howTo: string;
   result: string;
+};
+
+export type Price = {
+  price: number | string;
+  url: string;
+};
+export type PriceData = {
+  cardkingdom: Price;
+  tcgplayer: Price;
+  cardhoarder: Price;
+  cardmarket: Price;
+  mtgstocks: Price;
 };

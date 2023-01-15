@@ -22,7 +22,7 @@ export default {
     >No Combos Found</Message
   >
   <div v-else class="card-container">
-    <DeferredContent v-for="(combo, index) in combos" :key="index">
+    <DeferredContent v-for="(combo, index) in sort(combos)" :key="index">
       <Card>
         <template #header v-if="headerImage(combo)">
           <img :src="headerImage(combo)" :alt="combo.cards[0]" />
@@ -30,6 +30,12 @@ export default {
         <template #content>
           <div class="link-container">
             <CardLink v-for="(card, i) in combo.cards" :key="i" :name="card" />
+          </div>
+          <div v-if="preferences.showManaValue">
+            <SymbolText :text="requiredMana(combo)" />
+          </div>
+          <div v-if="preferences.showComboPrice">
+            {{ formatComboPrice(combo) }}
           </div>
           <ul>
             <li v-for="(result, i) in splitResult(combo.result)" :key="i">
@@ -60,12 +66,26 @@ import Card from "primevue/card";
 import Button from "primevue/button";
 import Message from "primevue/message";
 import CardLink from "./CardLink.vue";
+import SymbolText from "./SymbolText.vue";
 import SpinLoader from "@/components/utility/SpinLoader.vue";
 import type { Combo } from "@/lib/types";
 import getCard from "@/lib/getCard";
+import normalizeCardName from "@/lib/normalizeCard";
 import comboStore from "@/store/combos";
 import cardStore from "@/store/cards";
+import preferences from "@/store/preferences";
 defineProps<{ combos: Combo[]; cardsInDeck: string[] }>();
+
+const sort = (combos: Combo[]): Combo[] => {
+  if (preferences.sortMethod === "Unsorted") {
+    return combos;
+  } else if (preferences.sortMethod === "Price") {
+    return [...combos].sort((a, b) => getPrice(a) - getPrice(b));
+  } else if (preferences.sortMethod === "Price Dec") {
+    return [...combos].sort((a, b) => getPrice(b) - getPrice(a));
+  }
+  return combos;
+};
 
 const headerImage = (combo: Combo) => {
   return getCard(combo.cards[0])?.images.art;
@@ -76,6 +96,38 @@ const splitResult = (result: string): string[] => {
 const openModal = (combo: Combo) => {
   comboStore.comboModal = combo;
   comboStore.showComboModal = true;
+};
+
+const requiredMana = (combo: Combo): string => {
+  let cost = "";
+  for (const card of combo.cards) {
+    const manaCost = getCard(card)?.manaCost;
+    if (manaCost) {
+      if (cost !== "") {
+        cost += " + " + manaCost;
+      } else {
+        cost = manaCost;
+      }
+    }
+  }
+  return cost;
+};
+
+const getPrice = (combo: Combo): number => {
+  let price = 0;
+  for (const card of combo.cards) {
+    const prices = cardStore.price[normalizeCardName(card)];
+    const cardPrice = Number(prices[preferences.store]?.price);
+    price += isNaN(cardPrice) ? 0 : cardPrice;
+  }
+  return price;
+};
+
+const formatComboPrice = (combo: Combo): string => {
+  return getPrice(combo).toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+  });
 };
 </script>
 
@@ -99,5 +151,9 @@ const openModal = (combo: Combo) => {
 }
 .p-button-outlined {
   margin-left: calc(var(--space-small) / 2);
+}
+
+ul {
+  margin-bottom: 0;
 }
 </style>

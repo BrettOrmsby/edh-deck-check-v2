@@ -22,9 +22,11 @@ export default {
       ref="imageElement"
       :alt="name"
     />
-    <small>{{
-      toCurrency(cardStore.price[normalizeCardName(card?.name || "")] || 0)
-    }}</small>
+    <small
+      ><a target="_blank" :href="buyCardLink(card)">{{
+        toCurrency(card)
+      }}</a></small
+    >
   </a>
 </template>
 
@@ -34,7 +36,9 @@ import InlineMessage from "primevue/inlinemessage";
 import getCard from "@/lib/getCard";
 import normalizeCardName from "@/lib/normalizeCard";
 import cardStore from "@/store/cards";
+import preferences from "@/store/preferences";
 import { computed, ref, watchEffect } from "vue";
+import type { Card } from "@/lib/types";
 
 const props = defineProps<{ name: string }>();
 const loading = ref(true);
@@ -55,8 +59,29 @@ watchEffect(() => {
   }
 });
 
-const toCurrency = (value: number) => {
-  return value.toLocaleString("en-US", { style: "currency", currency: "USD" });
+const toCurrency = (card: Card | null): string => {
+  if (card) {
+    const prices = cardStore.price[normalizeCardName(card.name)];
+    const price = prices[preferences.store]?.price || 0;
+    return Number(price).toLocaleString("en-US", {
+      style: "currency",
+      currency: "USD",
+    });
+  } else {
+    return "0";
+  }
+};
+
+const buyCardLink = (card: Card | null): string => {
+  if (card) {
+    const prices = cardStore.price[normalizeCardName(card.name)];
+    return (
+      prices[preferences.store]?.url?.split("?")?.[0] ||
+      import.meta.env.BASE_URL
+    );
+  } else {
+    return import.meta.env.BASE_URL;
+  }
 };
 </script>
 

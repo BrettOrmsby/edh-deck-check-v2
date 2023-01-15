@@ -159,8 +159,8 @@ export default async function () {
         art: images.art_crop,
       },
       url: card.scryfall_uri,
-      price: card.prices.usd,
       colourId: card.color_identity,
+      manaCost: card.mana_cost,
     };
   }
 

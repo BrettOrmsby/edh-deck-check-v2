@@ -1,12 +1,12 @@
 import { reactive } from "vue";
-import type { Card } from "@/lib/types";
+import type { Card, PriceData } from "@/lib/types";
 
 export default reactive<{
   isError: boolean;
   isLoaded: boolean;
   cardsNotInDeck: string[];
   cards: Record<string, Card>;
-  price: Record<string, number>;
+  price: Record<string, PriceData>;
 }>({
   cardsNotInDeck: [],
   isError: false,

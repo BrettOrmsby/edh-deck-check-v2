@@ -2,6 +2,7 @@
 import DeckCheck from "./components/DeckCheck.vue";
 import ComboModal from "./components/ComboModal.vue";
 import HeaderMessage from "./components/HeaderMessage.vue";
+import SideBar from "./components/SideBar.vue";
 import FooterLegal from "./components/FooterLegal.vue";
 </script>
 
@@ -10,6 +11,7 @@ import FooterLegal from "./components/FooterLegal.vue";
   <div class="container">
     <ComboModal />
     <DeckCheck />
+    <SideBar />
   </div>
   <FooterLegal />
 </template>

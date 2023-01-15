@@ -26,6 +26,20 @@ export default {
       <li v-for="(card, index) in unfoundCards" :key="index">{{ card }}</li>
     </ul>
   </Panel>
+  <div
+    class="p-button p-component stat"
+    v-tooltip.bottom="'Number of combos in your deck'"
+  >
+    Combos <Badge :value="comboStore.combosInDeck.length" />
+  </div>
+  <div
+    class="p-button p-component stat"
+    v-tooltip.bottom="
+      'Number of cards in your deck that belong in at least one combo'
+    "
+  >
+    Unique Cards <Badge :value="uniqueCards.length" />
+  </div>
   <h2>Combos in Deck</h2>
   <ComboList :combos="comboStore.combosInDeck" :cards-in-deck="cardsToDeck" />
   <h2>Close Combos</h2>
@@ -36,6 +50,7 @@ export default {
 <script lang="ts" setup>
 import Textarea from "primevue/textarea";
 import Panel from "primevue/panel";
+import Badge from "primevue/badge";
 import ComboList from "@/components/combo/ComboList.vue";
 import CloseComboData from "@/components/combo/CloseComboData.vue";
 import { ref, computed, watchEffect, onMounted } from "vue";
@@ -128,6 +143,14 @@ const findCombos = () => {
   cardStore.cardsNotInDeck = cardsNotInDeck;
 };
 
+const uniqueCards = computed(() => {
+  let cards: string[] = [];
+  for (const combo of comboStore.closeCombos) {
+    cards = [...cards, ...combo.cards];
+  }
+  return [...new Set(cards)];
+});
+
 watchEffect(() => {
   if (cardStore.isLoaded && comboStore.isLoaded) {
     cardsToDeck;
@@ -146,5 +169,14 @@ watchEffect(() => {
 textarea {
   width: 75vw;
   margin: 0 auto;
+}
+.stat {
+  cursor: auto;
+  margin-top: var(--space-small);
+  margin-right: calc(var(--space-small) / 2);
+}
+
+.p-tooltip {
+  padding-left: 3em;
 }
 </style>

@@ -26,14 +26,10 @@ export default {
       <li v-for="(card, index) in unfoundCards" :key="index">{{ card }}</li>
     </ul>
   </Panel>
-  <div
-    class="p-button p-component stat"
-  >
+  <div class="p-button p-component stat">
     Combos <Badge :value="comboStore.combosInDeck.length" />
   </div>
-  <div
-    class="p-button p-component stat"
-  >
+  <div class="p-button p-component stat">
     Unique Cards <Badge :value="uniqueCards.length" />
   </div>
   <h2>Combos in Deck</h2>

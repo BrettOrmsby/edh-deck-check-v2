@@ -63,6 +63,8 @@ import Column from "primevue/column";
 import normalizeCardName from "@/lib/normalizeCard";
 import comboStore from "@/store/combos";
 import cardStore from "@/store/cards";
+import preferences from "@/store/preferences";
+import type { PriceData } from "@/lib/types";
 import { computed } from "vue";
 
 const isShown = computed(() => {
@@ -77,7 +79,7 @@ const isShown = computed(() => {
 
 type MissingCardData = {
   name: string;
-  price: number;
+  price: string;
   comboNumber: number;
   results: string[];
 };
@@ -103,13 +105,25 @@ const data = computed(() => {
     resultsArray = [...new Set(resultsArray)].sort();
     cardData.push({
       name: card,
-      price: cardStore.price[normalizedCard] || 0,
+      price: toCurrency(cardStore.price[normalizedCard]),
       comboNumber: combosPerCard,
       results: resultsArray,
     });
   }
   return cardData;
 });
+
+const toCurrency = (prices: PriceData): string => {
+  if (prices) {
+    const price = prices[preferences.store]?.price || 0;
+    return Number(price).toLocaleString("en-US", {
+      style: "currency",
+      currency: "USD",
+    });
+  } else {
+    return "0";
+  }
+};
 </script>
 
 <style scoped>

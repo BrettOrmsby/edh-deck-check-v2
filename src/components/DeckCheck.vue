@@ -28,15 +28,11 @@ export default {
   </Panel>
   <div
     class="p-button p-component stat"
-    v-tooltip.bottom="'Number of combos in your deck'"
   >
     Combos <Badge :value="comboStore.combosInDeck.length" />
   </div>
   <div
     class="p-button p-component stat"
-    v-tooltip.bottom="
-      'Number of cards in your deck that belong in at least one combo'
-    "
   >
     Unique Cards <Badge :value="uniqueCards.length" />
   </div>

@@ -26,12 +26,16 @@ export default {
       <li v-for="(card, index) in unfoundCards" :key="index">{{ card }}</li>
     </ul>
   </Panel>
-  <div class="p-button p-component stat">
-    Combos <Badge :value="comboStore.combosInDeck.length" />
-  </div>
-  <div class="p-button p-component stat">
-    Unique Cards <Badge :value="uniqueCards.length" />
-  </div>
+  <DeckStat
+    text="Combos"
+    :number="comboStore.combosInDeck.length"
+    tooltip-message="Number of combos found in the deck"
+  />
+  <DeckStat
+    text="Unique Cards"
+    :number="uniqueCards.length"
+    tooltip-message="Number of cards in the deck and in at least one of the decks combos"
+  />
   <h2>Combos in Deck</h2>
   <ComboList :combos="comboStore.combosInDeck" :cards-in-deck="cardsToDeck" />
   <h2>Close Combos</h2>
@@ -42,9 +46,9 @@ export default {
 <script lang="ts" setup>
 import Textarea from "primevue/textarea";
 import Panel from "primevue/panel";
-import Badge from "primevue/badge";
 import ComboList from "@/components/combo/ComboList.vue";
 import CloseComboData from "@/components/combo/CloseComboData.vue";
+import DeckStat from "@/components/combo/DeckStat.vue";
 import { ref, computed, watchEffect, onMounted } from "vue";
 import loadComboData from "@/lib/getData/getComboData";
 import loadCardData from "@/lib/getData/getCardData";

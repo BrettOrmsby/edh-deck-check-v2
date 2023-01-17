@@ -137,8 +137,8 @@ const findCombos = () => {
 
 const uniqueCards = computed(() => {
   let cards: string[] = [];
-  for (const combo of comboStore.closeCombos) {
-    cards = [...cards, ...combo.cards];
+  for (const combo of comboStore.combosInDeck) {
+    cards = [...cards, ...combo.cards.map((e) => normalizeCardName(e))];
   }
   return [...new Set(cards)];
 });

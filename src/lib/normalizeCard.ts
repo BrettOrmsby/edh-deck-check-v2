@@ -4,7 +4,7 @@ export default function (cardName: string): string {
       .trim()
       .toLowerCase()
       // Commander spellbook only used the first part of a card
-      .split(" // ")[0]
+      .split(/ \/\/? /)[0]
       // inconsistent punctuation
       .replace(/[^\w\s]/g, "")
   );

@@ -6,6 +6,7 @@ export default {
 
 <template>
   <a
+    href="#nolink"
     ref="link"
     @mouseenter="showTooltip()"
     @mouseleave="hideTooltip()"
@@ -82,5 +83,9 @@ function hideTooltip() {
   display: none;
   padding-left: 0.5em;
   z-index: 2;
+}
+
+a {
+  text-decoration: none;
 }
 </style>

@@ -13,36 +13,53 @@ async function fetchCombos(
   deck: string[],
   pageURL = "https://backend.commanderspellbook.com/find-my-combos"
 ): Promise<ComboData> {
-  const response = await fetch(pageURL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ commanders: [], main: deck }),
-  });
+  try {
+    const response = await fetch(pageURL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        //"Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify({ commanders: [], main: deck }),
+    });
 
-  if (!response.ok) {
-    const errorData = await response.json();
-    console.error("Error getting  combo data: ", errorData);
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error("Error getting  combo data: ", errorData);
+      comboStore.isError = true;
+      return {
+        identity: "",
+        included: [],
+        almostIncluded: [],
+      };
+    }
+
+    const responseData: ComboResult = await response.json();
+
+    if (responseData.next) {
+      const nextData = await fetchCombos(deck, responseData.next);
+
+      return {
+        identity: responseData.results.identity,
+        included: [
+          ...responseData.results.included,
+          ...nextData.included,
+        ].filter((combo) => combo.legalities.commander),
+        almostIncluded: [
+          ...responseData.results.almostIncluded,
+          ...nextData.almostIncluded,
+        ].filter((combo) => combo.legalities.commander),
+      };
+    }
+
+    return responseData.results;
+  } catch (error) {
+    console.error("Error getting  combo data.");
     comboStore.isError = true;
-  }
-
-  const responseData: ComboResult = await response.json();
-
-  if (responseData.next) {
-    const nextData = await fetchCombos(deck, responseData.next);
-
     return {
-      identity: responseData.results.identity,
-      included: [...responseData.results.included, ...nextData.included].filter(
-        (combo) => combo.legalities.commander
-      ),
-      almostIncluded: [
-        ...responseData.results.almostIncluded,
-        ...nextData.almostIncluded,
-      ].filter((combo) => combo.legalities.commander),
+      identity: "",
+      included: [],
+      almostIncluded: [],
     };
   }
-
-  return responseData.results;
 }

@@ -5,10 +5,14 @@
         <h1>EDH Deck Check</h1>
       </template>
       <template #subtitle>
-        <span class="subheading">
+        <p class="subheading">
           Paste in your deck and find the many combos within and combos that
           could be added just missing one card.
-        </span>
+        </p>
+        <p class="subheading">
+          EDH Deck Check no longer works online. Instead, you may copy the
+          source and use local host to view the website.
+        </p>
       </template>
       <template #content>
         <Button label="Get Started" @click="scroll()" class="primary-button" />

@@ -1,9 +1,3 @@
-<script lang="ts">
-export default {
-  name: "HeaderMessage",
-};
-</script>
-
 <template>
   <header class="header-container">
     <Card>

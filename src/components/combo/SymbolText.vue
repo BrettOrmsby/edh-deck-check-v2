@@ -1,9 +1,3 @@
-<script lang="ts">
-export default {
-  name: "SymbolText",
-};
-</script>
-
 <template>
   <span>
     <template v-for="(match, index) of matchedInput" :key="index">

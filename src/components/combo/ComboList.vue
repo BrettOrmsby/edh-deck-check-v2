@@ -1,20 +1,8 @@
-<script lang="ts">
-export default {
-  name: "ComboList",
-};
-</script>
-
 <template>
-  <Message
-    v-if="comboStore.isError || cardStore.isError"
-    severity="error"
-    :closable="false"
+  <Message v-if="comboStore.isError" severity="error" :closable="false"
     >An Error Occurred</Message
   >
-  <SpinLoader
-    v-else-if="!comboStore.isLoaded || !cardStore.isLoaded"
-    size="3em"
-  />
+  <SpinLoader v-else-if="!comboStore.isLoaded" size="3em" />
   <Message v-else-if="cardsInDeck.length < 1" severity="warn" :closable="false"
     >Your Deck Is Empty</Message
   >
@@ -25,21 +13,26 @@ export default {
     <DeferredContent v-for="(combo, index) in sort(combos)" :key="index">
       <Card>
         <template #header v-if="headerImage(combo)">
-          <img :src="headerImage(combo)" :alt="combo.cards[0]" />
+          <img :src="headerImage(combo)" :alt="combo.uses[0].card.name" />
         </template>
         <template #content>
           <div class="link-container">
-            <CardLink v-for="(card, i) in combo.cards" :key="i" :name="card" />
+            <CardLink
+              v-for="(card, i) in combo.uses"
+              :key="i"
+              :name="card.card.name"
+              :is-in-deck="cardsInDeck.includes(card.card.name)"
+            />
           </div>
           <div v-if="preferences.showManaValue">
-            <SymbolText :text="requiredMana(combo)" />
+            <SymbolText :text="combo.manaNeeded" />
           </div>
           <div v-if="preferences.showComboPrice">
             {{ formatComboPrice(combo) }}
           </div>
           <ul>
-            <li v-for="(result, i) in splitResult(combo.result)" :key="i">
-              {{ result }}
+            <li v-for="(produce, i) in combo.produces" :key="i">
+              {{ produce.name }}
             </li>
           </ul>
         </template>
@@ -69,11 +62,10 @@ import CardLink from "./CardLink.vue";
 import SymbolText from "./SymbolText.vue";
 import SpinLoader from "@/components/utility/SpinLoader.vue";
 import type { Combo } from "@/lib/types";
-import getCard from "@/lib/getCard";
 import normalizeCardName from "@/lib/normalizeCard";
 import comboStore from "@/store/combos";
-import cardStore from "@/store/cards";
 import preferences from "@/store/preferences";
+import priceStore from "@/store/price";
 defineProps<{ combos: Combo[]; cardsInDeck: string[] }>();
 
 const sort = (combos: Combo[]): Combo[] => {
@@ -88,35 +80,20 @@ const sort = (combos: Combo[]): Combo[] => {
 };
 
 const headerImage = (combo: Combo) => {
-  return getCard(combo.cards[0])?.images.art;
+  return `https://api.scryfall.com/cards/named?format=image&version=art_crop&exact=${encodeURI(
+    combo.uses[0].card.name
+  )}`;
 };
-const splitResult = (result: string): string[] => {
-  return result.split(".").filter((e) => e.trim() !== "");
-};
+
 const openModal = (combo: Combo) => {
   comboStore.comboModal = combo;
   comboStore.showComboModal = true;
 };
 
-const requiredMana = (combo: Combo): string => {
-  let cost = "";
-  for (const card of combo.cards) {
-    const manaCost = getCard(card)?.manaCost;
-    if (manaCost) {
-      if (cost !== "") {
-        cost += " + " + manaCost;
-      } else {
-        cost = manaCost;
-      }
-    }
-  }
-  return cost;
-};
-
 const getPrice = (combo: Combo): number => {
   let price = 0;
-  for (const card of combo.cards) {
-    const prices = cardStore.price[normalizeCardName(card)];
+  for (const { card } of combo.uses) {
+    const prices = priceStore.price[normalizeCardName(card.name)];
     const cardPrice = Number(prices[preferences.store]?.price);
     price += isNaN(cardPrice) ? 0 : cardPrice;
   }
@@ -141,6 +118,7 @@ const formatComboPrice = (combo: Combo): string => {
 }
 .p-card {
   max-width: 300px;
+  width: 100%;
   border-radius: var(--border-radius);
   overflow: hidden;
 }
@@ -155,5 +133,11 @@ const formatComboPrice = (combo: Combo): string => {
 
 ul {
   margin-bottom: 0;
+}
+img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  object-position: center;
 }
 </style>

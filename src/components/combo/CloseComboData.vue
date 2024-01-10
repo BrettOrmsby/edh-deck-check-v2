@@ -1,9 +1,3 @@
-<script lang="ts">
-export default {
-  name: "CloseComboData",
-};
-</script>
-
 <template>
   <div v-if="isShown" style="margin-bottom: var(--space-medium)">
     <Panel header="Missing Card Summary" :collapsed="true" :toggleable="true">
@@ -16,7 +10,7 @@ export default {
       >
         <Column field="name" header="Name" :sortable="true">
           <template #body="slotProps">
-            <CardLink :name="slotProps.data.name" />
+            <CardLink :name="slotProps.data.name" :isInDeck="false" />
           </template>
         </Column>
         <Column field="price" header="Price" :sortable="true">
@@ -62,55 +56,51 @@ import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import normalizeCardName from "@/lib/normalizeCard";
 import comboStore from "@/store/combos";
-import cardStore from "@/store/cards";
 import preferences from "@/store/preferences";
+import priceStore from "@/store/price";
 import type { PriceData } from "@/lib/types";
 import { computed } from "vue";
+
+const props = defineProps<{ cardsInDeck: string[] }>();
 
 const isShown = computed(() => {
   return (
     !comboStore.isError &&
-    !cardStore.isError &&
     comboStore.isLoaded &&
-    cardStore.isLoaded &&
-    comboStore.closeCombos.length > 1
+    comboStore.comboData.almostIncluded.length > 1
   );
 });
 
-type MissingCardData = {
-  name: string;
-  price: string;
-  comboNumber: number;
-  results: string[];
-};
+type MissingCardData = Record<
+  string,
+  {
+    name: string;
+    price: string;
+    comboNumber: number;
+    results: string[];
+  }
+>;
 
 const data = computed(() => {
-  let cardData: MissingCardData[] = [];
-  for (let card of cardStore.cardsNotInDeck) {
-    const normalizedCard = normalizeCardName(card);
-    let combosPerCard = 0;
-    let resultsArray: string[] = [];
-    for (let combo of comboStore.closeCombos) {
-      for (let comboCard of combo.cards) {
-        if (normalizeCardName(comboCard) === normalizedCard) {
-          combosPerCard += 1;
-          for (let result of combo.result.split(".")) {
-            if (result.trim()) {
-              resultsArray.push(result);
-            }
-          }
-        }
+  let cardData: MissingCardData = {};
+  for (let combo of comboStore.comboData.almostIncluded) {
+    for (let comboCard of combo.uses) {
+      if (props.cardsInDeck.includes(comboCard.card.name)) {
+        continue;
       }
+      const cardName = comboCard.card.name;
+      if (!(normalizeCardName(cardName) in cardData)) {
+        cardData[normalizeCardName(cardName)] = {
+          name: cardName,
+          price: toCurrency(priceStore.price[normalizeCardName(cardName)]),
+          comboNumber: 0,
+          results: [],
+        };
+      }
+      cardData[normalizeCardName(cardName)].comboNumber += 1;
     }
-    resultsArray = [...new Set(resultsArray)].sort();
-    cardData.push({
-      name: card,
-      price: toCurrency(cardStore.price[normalizedCard]),
-      comboNumber: combosPerCard,
-      results: resultsArray,
-    });
   }
-  return cardData;
+  return Object.keys(cardData).map((key) => cardData[key]); // Object.values(cardData)
 });
 
 const toCurrency = (prices: PriceData): string => {

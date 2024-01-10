@@ -1,10 +1,5 @@
-<script lang="ts">
-export default {
-  name: "DeckCheck",
-};
-</script>
-
 <template>
+  <ComboModal :cards-in-deck="cardsToDeck" />
   <Textarea
     id="scrollTo"
     v-model="rawDeckText"
@@ -12,60 +7,45 @@ export default {
     :autoResize="false"
     :placeholder="'Enter your deck:\nHeliod, Sun-Crowned\n1 Walking Ballista (2xm) 306'"
   />
-  <Panel
-    v-if="unfoundCards.length > 0"
-    :toggleable="true"
-    header="Cards Not Found"
-    style="margin-top: var(--space-small)"
-  >
-    <p>
-      Here are the cards that have not been found due to their spelling,
-      legality or other issues:
-    </p>
-    <ul>
-      <li v-for="(card, index) in unfoundCards" :key="index">{{ card }}</li>
-    </ul>
-  </Panel>
   <DeckStat
     text="Combos"
-    :number="comboStore.combosInDeck.length"
+    :number="comboStore.comboData.included.length"
     tooltip-message="Number of combos found in the deck"
   />
   <DeckStat
     text="Unique Cards"
     :number="uniqueCards.length"
-    tooltip-message="Number of cards in the deck and in at least one of the decks combos"
+    tooltip-message="Number of cards in at least one combo in the deck"
   />
   <h2>Combos in Deck</h2>
-  <ComboList :combos="comboStore.combosInDeck" :cards-in-deck="cardsToDeck" />
+  <ComboList
+    :combos="comboStore.comboData.included"
+    :cards-in-deck="cardsToDeck"
+  />
   <h2>Close Combos</h2>
-  <CloseComboData />
-  <ComboList :combos="comboStore.closeCombos" :cards-in-deck="cardsToDeck" />
+  <CloseComboData :cards-in-deck="cardsToDeck" />
+  <ComboList
+    :combos="comboStore.comboData.almostIncluded"
+    :cards-in-deck="cardsToDeck"
+  />
 </template>
 
 <script lang="ts" setup>
 import Textarea from "primevue/textarea";
-import Panel from "primevue/panel";
 import ComboList from "@/components/combo/ComboList.vue";
 import CloseComboData from "@/components/combo/CloseComboData.vue";
+import ComboModal from "@/components/ComboModal.vue";
 import DeckStat from "@/components/combo/DeckStat.vue";
 import { ref, computed, watchEffect, onMounted } from "vue";
-import loadComboData from "@/lib/getData/getComboData";
-import loadCardData from "@/lib/getData/getCardData";
 import loadPriceData from "@/lib/getData/getPriceData";
 import loadSymbolData from "@/lib/getData/getSymbolData";
-import getCard from "@/lib/getCard";
 import normalizeCardName from "@/lib/normalizeCard";
+import getComboData from "@/lib/getData/getComboData";
 import comboStore from "@/store/combos";
-import cardStore from "@/store/cards";
-import type { Combo } from "@/lib/types";
 
 const rawDeckText = ref("");
-const unfoundCards = ref<string[]>([]);
 
 onMounted(() => {
-  loadComboData();
-  loadCardData();
   loadPriceData();
   loadSymbolData();
 });
@@ -88,70 +68,19 @@ const cardsToDeck = computed(() => {
   return cards;
 });
 
-const findCombos = () => {
-  const deck = cardsToDeck.value;
-  const normalizedDeck = deck.map((e) => normalizeCardName(e));
-  let identity: string[] = [];
-  const almostCombosInDeck: Combo[] = [];
-  const combosInDeck: Combo[] = [];
-  let cardsNotInDeck: string[] = [];
-  unfoundCards.value = [];
-  for (let cardName of deck) {
-    const card = getCard(cardName);
-    if (!card) {
-      unfoundCards.value.push(cardName);
-      continue;
-    }
-
-    const cardIdentity = card.colourId;
-    identity = [...new Set([...identity, ...cardIdentity])];
-  }
-  identity = identity.map((e) => e.toLowerCase());
-  main: for (let combo of comboStore.combos) {
-    for (let colour of combo.identity.split(",")) {
-      if (colour !== "c" && !identity.includes(colour)) {
-        continue main;
-      }
-    }
-    let numberCardsNotInDeck = 0;
-    let tempCardsNotInDeck = [];
-    for (let card of combo.cards) {
-      if (!getCard(card)) {
-        continue main;
-      }
-      if (!normalizedDeck.includes(normalizeCardName(card))) {
-        numberCardsNotInDeck += 1;
-        tempCardsNotInDeck.push(card);
-        if (numberCardsNotInDeck > 1) {
-          continue main;
-        }
-      }
-    }
-    cardsNotInDeck = [...new Set([...cardsNotInDeck, ...tempCardsNotInDeck])];
-    if (numberCardsNotInDeck === 1) {
-      almostCombosInDeck.push(combo);
-    } else {
-      combosInDeck.push(combo);
-    }
-  }
-  comboStore.closeCombos = almostCombosInDeck;
-  comboStore.combosInDeck = combosInDeck;
-  cardStore.cardsNotInDeck = cardsNotInDeck;
-};
-
 const uniqueCards = computed(() => {
   let cards: string[] = [];
-  for (const combo of comboStore.combosInDeck) {
-    cards = [...cards, ...combo.cards.map((e) => normalizeCardName(e))];
+  for (const combo of comboStore.comboData.included) {
+    cards = [
+      ...cards,
+      ...combo.uses.map((e) => normalizeCardName(e.card.name)),
+    ];
   }
   return [...new Set(cards)];
 });
 
 watchEffect(() => {
-  if (cardStore.isLoaded && comboStore.isLoaded) {
-    cardsToDeck;
-    findCombos();
-  }
+  getComboData(cardsToDeck.value);
 });
 </script>
 

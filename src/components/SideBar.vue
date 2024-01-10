@@ -1,9 +1,3 @@
-<script lang="ts">
-export default {
-  name: "SideBar",
-};
-</script>
-
 <template>
   <Sidebar v-model:visible="preferences.isSidebarOpen" position="left">
     <h2>Show Additional Content</h2>

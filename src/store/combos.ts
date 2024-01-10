@@ -1,28 +1,40 @@
 import { reactive } from "vue";
-import type { Combo } from "@/lib/types";
+import type { Combo, ComboData } from "@/lib/types";
 
 export default reactive<{
   isError: boolean;
   isLoaded: boolean;
-  combos: Combo[];
-  closeCombos: Combo[];
-  combosInDeck: Combo[];
+  comboData: ComboData;
   comboModal: Combo;
   showComboModal: boolean;
   manaSymbols: Record<string, string>;
 }>({
   isError: false,
   isLoaded: false,
-  combos: [],
-  closeCombos: [],
-  combosInDeck: [],
+  comboData: { identity: "", included: [], almostIncluded: [] },
   comboModal: {
     id: "",
-    cards: [],
+    uses: [],
+    produces: [],
     identity: "",
-    before: "",
-    howTo: "",
-    result: "",
+    manaNeeded: "",
+    otherPrerequisites: "",
+    description: "",
+    popularity: 0,
+    legalities: {
+      commander: false,
+      pauperCommanderMain: false,
+      pauperCommander: false,
+      oathbreaker: false,
+      predh: false,
+      brawl: false,
+      vintage: false,
+      legacy: false,
+      modern: false,
+      pioneer: false,
+      standard: false,
+      pauper: false,
+    },
   },
   showComboModal: false,
   manaSymbols: {},

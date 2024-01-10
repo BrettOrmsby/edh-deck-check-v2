@@ -1,9 +1,3 @@
-<script lang="ts">
-export default {
-  name: "CardLink",
-};
-</script>
-
 <template>
   <a
     href="#nolink"
@@ -12,7 +6,7 @@ export default {
     @mouseleave="hideTooltip()"
     @focus="showTooltip()"
     @blur="hideTooltip()"
-    :class="{ red: cardStore.cardsNotInDeck.includes(name) }"
+    :class="{ red: !isInDeck }"
     >{{ name }}</a
   >
   <div
@@ -23,17 +17,16 @@ export default {
     @focus="showTooltip()"
     @blur="hideTooltip()"
   >
-    <CardImage v-if="revealed" :name="name" />
+    <CardImage v-if="revealed" :name="name" isInDeck />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from "vue";
 import CardImage from "./CardImage.vue";
-import cardStore from "@/store/cards";
 import { computePosition, flip, shift } from "@floating-ui/dom";
 
-defineProps<{ name: string }>();
+defineProps<{ name: string; isInDeck: boolean }>();
 
 const revealed = ref(false);
 const tooltip = ref<HTMLDivElement | null>(null);

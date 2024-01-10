@@ -13,7 +13,6 @@ export default async function () {
     "https://api.scryfall.com/symbology"
   );
   if (symbolData instanceof Error) {
-    // not too important to report an error
     return;
   }
   const symbolMap: Record<string, string> = {};

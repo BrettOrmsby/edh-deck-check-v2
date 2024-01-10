@@ -1,9 +1,3 @@
-<script lang="ts">
-export default {
-  name: "DeckStat",
-};
-</script>
-
 <template>
   <div
     class="p-button p-component stat"

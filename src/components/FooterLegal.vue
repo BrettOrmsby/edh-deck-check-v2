@@ -1,9 +1,3 @@
-<script lang="ts">
-export default {
-  name: "FooterLegal",
-};
-</script>
-
 <template>
   <Card>
     <template #content>
@@ -15,11 +9,9 @@ export default {
             href="https://github.com/Commander-Spellbook/website-v2/blob/main/LICENSE"
             >license</a
           >). This data can be found on their public
-          <a
-            href="https://docs.google.com/spreadsheets/d/1KqyDRZRCgy8YgMFnY0tHSw_3jC99Z0zFvJrPbfm66vA/edit#gid=0"
-            >Google Sheet</a
-          >. Card and image data is from
-          <a href="https://scryfall.com/">Scryfall</a>, in accordance to the
+          <a href="https://backend.commanderspellbook.com/">Api</a>. Card images
+          are provided by <a href="https://scryfall.com/">Scryfall</a>, in
+          accordance to the
           <a href="https://company.wizards.com/en/legal/fancontentpolicy"
             >Wizards of the Coast's Fan Content Policy</a
           >.

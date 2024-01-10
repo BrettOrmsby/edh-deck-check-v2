@@ -1,5 +1,5 @@
 import safeFetch from "../fetch";
-import cardStore from "@/store/cards";
+import cardStore from "@/store/price";
 import normalizeCardName from "@/lib/normalizeCard";
 import type { PriceData } from "@/lib/types";
 export default async function () {

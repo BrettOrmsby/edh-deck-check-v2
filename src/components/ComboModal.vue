@@ -1,32 +1,23 @@
-<script lang="ts">
-export default {
-  name: "ComboModal",
-};
-</script>
-
 <template>
   <Dialog
     :header="header"
     v-model:visible="comboStore.showComboModal"
     style="max-width: 800px; width: 100%; margin: 0 2em"
     :modal="true"
+    :draggable="false"
   >
     <h3>Cards</h3>
     <div class="cardsContainer">
       <CardImage
-        v-for="(card, index) of comboStore.comboModal.cards"
+        v-for="(card, index) of comboStore.comboModal.uses"
         :key="index"
-        :name="card"
+        :name="card.card.name"
+        :is-in-deck="cardsInDeck.includes(card.card.name)"
       />
     </div>
     <h3>Prerequisites</h3>
     <ul>
-      <li
-        v-for="(item, index) in formatParagraphToList(
-          comboStore.comboModal.before
-        )"
-        :key="index"
-      >
+      <li v-for="(item, index) in prerequisites" :key="index">
         <SymbolText :text="item" />
       </li>
     </ul>
@@ -34,7 +25,7 @@ export default {
     <ol>
       <li
         v-for="(item, index) in formatParagraphToList(
-          comboStore.comboModal.howTo
+          comboStore.comboModal.description
         )"
         :key="index"
       >
@@ -43,13 +34,8 @@ export default {
     </ol>
     <h3>Result</h3>
     <ul>
-      <li
-        v-for="(item, index) in formatParagraphToList(
-          comboStore.comboModal.result
-        )"
-        :key="index"
-      >
-        <SymbolText :text="item" />
+      <li v-for="(item, index) in comboStore.comboModal.produces" :key="index">
+        <SymbolText :text="item.name" />
       </li>
     </ul>
     <div class="footer">
@@ -86,27 +72,87 @@ import SymbolText from "@/components/combo/SymbolText.vue";
 import { computed } from "vue";
 import comboStore from "@/store/combos";
 
+defineProps<{ cardsInDeck: string[] }>();
+
 const header = computed(() => {
-  const main = [...comboStore.comboModal.cards].splice(0, 2).join(" | ");
-  if (comboStore.comboModal.cards.length > 2) {
-    let plus = comboStore.comboModal.cards.length - 2;
+  const main = [...comboStore.comboModal.uses]
+    .splice(0, 2)
+    .map((e) => e.card.name)
+    .join(" | ");
+  if (comboStore.comboModal.uses.length > 2) {
+    let plus = comboStore.comboModal.uses.length - 2;
     return `${main} | + ${plus} More`;
   }
   return main;
 });
 
+const prerequisites = computed(() => {
+  const zones: Record<string, string[]> = {
+    B: [],
+    H: [],
+    G: [],
+    E: [],
+    C: [],
+    L: [],
+  };
+  const cards = comboStore.comboModal.uses;
+  cards.forEach((card) => zones[card.zoneLocations[0]].push(card.card.name));
+
+  let prerequisites: string[] = [];
+
+  if (zones.C.length) {
+    prerequisites.push(
+      formatArrayToTextList(zones.C) + " in the command zone."
+    );
+  }
+  if (zones.G.length) {
+    prerequisites.push(formatArrayToTextList(zones.G) + " in the graveyard.");
+  }
+  if (zones.E.length) {
+    prerequisites.push(formatArrayToTextList(zones.E) + " exiled.");
+  }
+  if (zones.H.length) {
+    prerequisites.push(formatArrayToTextList(zones.H) + " in your hand.");
+  }
+  if (zones.L.length) {
+    prerequisites.push(formatArrayToTextList(zones.L) + " in your library.");
+  }
+  if (zones.B.length) {
+    prerequisites.push(formatArrayToTextList(zones.B) + " on the battlefield.");
+  }
+
+  return [
+    ...prerequisites,
+    ...formatParagraphToList(comboStore.comboModal.otherPrerequisites),
+  ];
+});
+
+const formatArrayToTextList = (array: string[]) => {
+  if (array.length === 1) {
+    return array[0];
+  }
+  if (array.length === 2) {
+    return array[0] + " and " + array[1];
+  }
+  const lastElement = array.pop();
+  return array.join(", ") + ", and " + lastElement;
+};
+
 const formatParagraphToList = (text: string) => {
   if (!text) {
-    return "";
+    return [];
   }
   return text
     .trim()
-    .split(/\.(?!$)/g)
+    .split(/(?<=\.)(?!$)/g)
     .filter((e) => e);
 };
 
 const edhrecLinkColour = computed(() => {
-  const comboIdentity = comboStore.comboModal.identity.split(",").sort();
+  const comboIdentity = comboStore.comboModal.identity
+    .toLowerCase()
+    .split("")
+    .sort();
   const colourCombos = [
     ["c"],
     ["w"],
@@ -155,6 +201,9 @@ const edhrecLinkColour = computed(() => {
 </script>
 
 <style scoped>
+h3:first-of-type {
+  margin-top: 0;
+}
 .cardsContainer {
   display: flex;
   justify-content: center;

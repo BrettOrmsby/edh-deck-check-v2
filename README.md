@@ -1,6 +1,7 @@
 # EDH Deck Check
 
-https://edh-deck-check.vercel.app/
+> [!NOTE]  
+> The website no longer works as hosted. Because of a change in the commander spellbook API, it only works on a local host.
 
 ![Header Image](public/header.png)
 
